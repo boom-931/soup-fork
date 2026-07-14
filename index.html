@@ -1,0 +1,174 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>狗狗饲养手册</title>
+    
+<style type="text/css">
+        * {
+            font-family: "微软雅黑";
+        }
+        #father {
+            width: 1000px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .index{
+        display: flex;
+        background: #afafad;
+        margin-bottom: 20px;
+    }
+    .index-item{
+        flex:1;
+        text-align: center;
+        padding:10px;
+    }
+    .index-item a{
+        text-decoration: none;
+        color:#111111;
+    }
+    .index-item a:hover{
+        color:#ffffff;
+        background-color: #26b1e3;
+    }
+    .box {
+        width: 300px;
+        height: 320px;
+        float: left;
+        margin: 15px;
+        text-align: center;
+        background: #f5f5f5;
+        border: 1px solid #ccc;
+    }
+        .box img {
+            width: 280px;
+            height: 200px;
+            margin-top: 10px;
+        }
+        .box a {
+            text-decoration: none;
+            color: #333;
+        }
+        .leave-message {
+            max-width: 600px;
+            margin: 30px auto;
+        }
+        #msgInput {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+        }
+        #submitBtn {
+            margin-top: 10px;
+            padding: 6px 16px;
+        }
+        .message-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        .time {
+            font-size: 12px;
+            color: #666;
+        }
+</style>
+</head>
+<body>
+    <div id="father">
+        <h1>狗狗饲养手册</h1>
+
+    <div class="index">
+        <div class="index-item"><a href="index.html">首页</a></div>
+        <div class="index-item"><a href="search.html">搜索框</a></div>
+        <div class="index-item"><a href="index.html">留言区</a></div>
+    </div>
+<div class="content">
+        <div class="box">
+            <a href="page1.html">
+                <img src="image/eat.jpg">
+                <h3>狗狗饮食</h3>
+            </a>
+        </div>
+        <div class="box">
+            <a href="page2.html">
+                <img src="image/wash.jpg">
+                <h3>日常护理</h3>
+            </a>
+        </div>
+        <div class="box">
+            <a href="page3.html">
+                <img src="image/disease.jpg">
+                <h3>常见疾病</h3>
+            </a>
+    </div>
+        <div class="leave-message">
+        <h2>留言区</h2>
+        <textarea id="msgInput" placeholder="写下你的养犬心得或疑问..."></textarea>
+        <br>
+        <button id="submitBtn">提交留言</button>
+        <div id="messageList"></div>
+        </div>
+</div>
+
+<script>
+function goPage1(){
+    alert("即将进入狗狗饮食详情页面");
+}
+function goPage2(){
+    alert("即将进入日常护理详情页面");
+}
+function goPage3(){
+    alert("即将进入常见疾病详情页面");
+}
+const STORAGE_KEY = 'dogMessages';
+
+window.onload = function () {
+  renderMessages();
+};
+
+document.getElementById('submitBtn').addEventListener('click', function () {
+  const content = document.getElementById('msgInput').value.trim();
+  if (!content) {
+    alert('留言不能为空！');
+    return;
+  }
+
+  let messages = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  messages.push({
+    content: content,
+    time: new Date().toLocaleString()
+  });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+  renderMessages();
+  document.getElementById('msgInput').value = '';
+});
+
+function renderMessages() {
+  const messages = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  const listEl = document.getElementById('messageList');
+  listEl.innerHTML = '';
+
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const item = messages[i];
+    const div = document.createElement('div');
+    div.className = 'message-item';
+    div.innerHTML = 
+      '<div>' + escapeHtml(item.content) + '</div>' +
+      '<div class="time">' + item.time + '</div>';
+    listEl.appendChild(div);
+  }
+}
+
+function escapeHtml(str) {
+  return str.replace(/[&<>"']/g, function (c) {
+    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+    return map[c];
+  });
+}
+
+</script>
+</body>
+</html>
